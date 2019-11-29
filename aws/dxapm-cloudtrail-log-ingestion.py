@@ -85,7 +85,7 @@ def lambda_handler(event, context):
             
             #send all collected event logs
             if not log_result:   
-                logger.info('No matching event found..')
+                logger.info('No matching log found..')
             else:
                 rawJsonForEs = {
                     "documents": [
@@ -134,7 +134,6 @@ def parse_change_event(record):
     eventBody['product'] = 'Application Performance Monitoring'
     eventBody['message'] = 'Event is: ' + str(record['eventName']) + 'on host: '+ str(host)
     eventBody['timestamp'] = record['eventTime']
-    
     return eventBody;
     
 
@@ -182,7 +181,7 @@ def getServiceName(record):
 def getHostName(serviceName, record):
     hostName = None
     if 'ec2' == serviceName:
-        matchObject = re.search('instanceId\":\s+\"(.*?)\"', str(record))
+        matchObject = re.search('instanceId\':\s+\'(.*?)\'', str(record))
         if matchObject is not None:
             hostName = matchObject.group(1)
             logger.info('hostName:: ' + str(hostName))
