@@ -18,18 +18,33 @@ API_ENDPOINT = '<public data ingestion endpoint>/ingestion'
 TENANT_ID = '<TENANT_ID>'
 
 ############################################################
+## To add new service
+# 1. add servicename in list_supported_cw_services
+# 2. add interested event name in include_json[<servicename>] array and exclude_json[<servicename>]
+# 3. add hostname logic in getHostName() function
+
+## To add new events in existing service
+# 1. just update the interested event name in include_json[<servicename>] array
+###########################################################
 #list of supported events
-list_supported_cw_services = {'ec2'}
+list_supported_cw_services = {'ec2','ecs','rds','elasticache'}
 
 #include event list
 include_json = {}
 #include ec2 event list
 include_json['ec2'] = ['StartInstances','RunInstances','TerminateInstances','StopInstances']
+include_json['ecs'] = ['CreateService','RunTask','DeleteCluster']
+include_json['rds'] = ['CreateDBInstance','RebootDBInstance','DeleteDBInstance','ModifyDBInstance']
+include_json['elasticache'] = ['CreateCacheCluster','ModifyCacheCluster']
 
 #exclude event list
 exclude_json = {}
 #exclude ec2 event list
 exclude_json['ec2'] = None
+exclude_json['ecs'] = None
+exclude_json['rds'] = None
+exclude_json['elasticache'] = None
+
 
 #main function
 def lambda_handler(event, context):
@@ -132,7 +147,7 @@ def parse_change_event(record):
     eventBody['event_unique_id'] = str(serviceName) + '_' + str(host) + '_' + str(record['eventTime'])
     eventBody['host'] = host
     eventBody['product'] = 'Application Performance Monitoring'
-    eventBody['message'] = 'Event is: ' + str(record['eventName']) + 'on host: '+ str(host)
+    eventBody['message'] = 'Event is: ' + str(record['eventName']) + ' on host: '+ str(host)
     eventBody['timestamp'] = record['eventTime']
     return eventBody;
     
@@ -146,7 +161,7 @@ def filter_events(record):
             if include_json[serviceName] is None and exclude_json[serviceName] is None:
                 return False
             try:
-               if exclude_json['ec2'] is not None:
+               if exclude_json[serviceName] is not None:
                # if an exclude match is found, do not add event to events_to_send
                     if searchPattern(exclude_json[serviceName], str(record)):
                        return False
@@ -184,5 +199,19 @@ def getHostName(serviceName, record):
         matchObject = re.search('instanceId\':\s+\'(.*?)\'', str(record))
         if matchObject is not None:
             hostName = matchObject.group(1)
-            logger.info('hostName:: ' + str(hostName))
+            logger.info('ec2 hostName:: ' + str(hostName))
+    if 'ecs' == serviceName:
+        matchObject = re.search('clusterName\':\s+\'(.*?)\'', str(record))
+        if matchObject is not None:
+            hostName = matchObject.group(1)
+            logger.info('ecs hostName:: ' + str(hostName))
+    if 'rds' == serviceName:
+        hostName = str(record['dBInstanceIdentifier'])
+        if hostName is not None:
+            logger.info('rds hostName:: ' + str(hostName))
+    if 'elasticache' == serviceName:
+        matchObject = re.search('cacheClusterId\':\s+\'(.*?)\'', str(record))
+        if matchObject is not None:
+            hostName = matchObject.group(1)
+            logger.info('elasticache hostName:: ' + str(hostName))
     return hostName
