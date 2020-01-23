@@ -65,11 +65,12 @@ def lambda_handler(event, context):
                 # Reading line by line avoid a bug where gzip would take a very long time (>5min) for
                 # file around 60MB gzipped
                 data = b"".join(BufferedReader(decompress_stream))
-                
+
+        log_result = []
+        event_result = []
         try:
             json_data = json.loads(data)
-            log_result = []
-            event_result = []
+
             if 'Records' in json_data:
                 for record in json_data['Records']:
                     if filter_events(record):
@@ -100,7 +101,7 @@ def lambda_handler(event, context):
             
             #send all collected event logs
             if not log_result:   
-                logger.info('No matching log found..')
+                logger.debug('No matching log found..')
             else:
                 rawJsonForEs = {
                     "documents": [
@@ -123,7 +124,8 @@ def lambda_handler(event, context):
             traceback.print_exc()
             return False
         finally:
-            logger.info("Lambda execution completed with " + response)
+            if event_result:
+                logger.info("Lambda execution completed with " + response)
 
 def post_data(body):
     #send to endpoint
