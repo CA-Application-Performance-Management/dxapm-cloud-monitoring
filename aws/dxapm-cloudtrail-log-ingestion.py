@@ -34,7 +34,7 @@ include_json = {}
 #include ec2 event list
 include_json['ec2'] = ['StartInstances','RunInstances','TerminateInstances','StopInstances']
 include_json['ecs'] = ['CreateService','RunTask','DeleteCluster']
-include_json['rds'] = ['CreateDBInstance','StopDBInstance','RebootDBInstance','DeleteDBInstance','ModifyDBInstance']
+include_json['rds'] = ['CreateDBInstance','StartDBInstance','StopDBInstance','RebootDBInstance','DeleteDBInstance','ModifyDBInstance']
 include_json['elasticache'] = ['CreateCacheCluster','ModifyCacheCluster']
 
 #exclude event list
@@ -54,7 +54,7 @@ def lambda_handler(event, context):
         # Get the object from the event and show its content type
         bucket = event["Records"][0]["s3"]["bucket"]["name"]
         key = urllib.parse.unquote_plus(event["Records"][0]["s3"]["object"]["key"])
-        logger.info('Error event occurred:: '+ str(bucket) + '::' + str(key))
+        logger.info('CloudTrail event occurred:: '+ str(bucket) + '::' + str(key))
         # Extract the S3 object
         eventBody = s3.get_object(Bucket=bucket, Key=key)
         body = eventBody["Body"]
@@ -73,7 +73,7 @@ def lambda_handler(event, context):
             if 'Records' in json_data:
                 for record in json_data['Records']:
                     if filter_events(record):
-                        logger.info('Error event occurred:: ' + str(record))
+                        logger.info('Filter event occurred:: ' + str(record))
                         logger.debug(record)
                         event_result.append(parse_change_event(record))
                         log_result.append(record)
@@ -189,7 +189,7 @@ def getServiceName(record):
     serviceName = None
     if len(service) > 1:
         serviceName = service[0]
-        logger.info('serviceName:: ' + str(serviceName))
+        logger.debug('serviceName:: ' + str(serviceName))
     return serviceName;    
     
 #get hostname
@@ -206,8 +206,9 @@ def getHostName(serviceName, record):
             hostName = matchObject.group(1)
             logger.info('ecs hostName:: ' + str(hostName))
     if 'rds' == serviceName:
-        hostName = str(record['dBInstanceIdentifier'])
-        if hostName is not None:
+        matchObject = re.search('dBInstanceIdentifier\':\s+\'(.*?)\'', str(record))
+        if matchObject is not None:
+            hostName = matchObject.group(1)
             logger.info('rds hostName:: ' + str(hostName))
     if 'elasticache' == serviceName:
         matchObject = re.search('cacheClusterId\':\s+\'(.*?)\'', str(record))
