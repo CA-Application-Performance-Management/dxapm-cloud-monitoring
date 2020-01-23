@@ -34,7 +34,7 @@ include_json = {}
 #include ec2 event list
 include_json['ec2'] = ['StartInstances','RunInstances','TerminateInstances','StopInstances']
 include_json['ecs'] = ['CreateService','RunTask','DeleteCluster']
-include_json['rds'] = ['CreateDBInstance','RebootDBInstance','DeleteDBInstance','ModifyDBInstance']
+include_json['rds'] = ['CreateDBInstance','StopDBInstance','RebootDBInstance','DeleteDBInstance','ModifyDBInstance']
 include_json['elasticache'] = ['CreateCacheCluster','ModifyCacheCluster']
 
 #exclude event list
