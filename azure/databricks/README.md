@@ -14,32 +14,34 @@ To configure Spark Monitoring and Host Monitoring extensions, follow these steps
 
 ### Download Agent
 - Log in to DX APM.
-- Open the DX Application Performance Management tile.
-- In the left navigation panel, click on Agents.
-- In the Agents page, click Download Agent. 
-- Select UNIX as the operating system, then click on the Infrastructure Agent option
-- In the Infrastructure tab, select Spark and Host Monitoring. The Configure Spark dialog opens with Agent Controller
-- The downloaded tar file will later be uploaded to the Azure Databricks Workspace.
+- Open the **DX Application Performance Management** tile.
+- In the left navigation panel, click on **Agents**.
+- In the Agents page, click on **Download Agent**. 
+- On **Select Agent to Download** Page, Select UNIX as the operating system, then click on the **Infrastructure Agent** option.
+- The **Configure Infrastructure Agent** dialog opens with Agent Controller, Attribute Decorator and Http Collector selected.
+- In this dialog, select Spark and Host Monitoring, Configure the properties as described there.
+- Click **Download**. The Infrastructure Agent is downloaded with Spark and Host Monitoring enabled.
+- The **downloaded tar** file will later be uploaded to the Azure Databricks Workspace.
 
 ### Download init-script
-- Download apmia-installation.sh script from the github repository.
-- The downloaded tar file will later be uploaded to the Azure Databricks Workspace.
+- Download **apmia-installation.sh** script from the github repository.
+- The downloaded **apmia-installation.sh** file will later be uploaded to the Azure Databricks Workspace.
 
 ### Download and Configure Databricks CLI
 Azure Databricks CLI setup is required to upload the installation script and the Spark Monitoring extension tar to the Azure Databricks Workspace. Follow the below steps to install the Databricks-CLI.
 
 - Launch your Databricks Workspace.
 - A personnel access token needs to be generated, this token will later be configured in Databricks-CLI
-- To generate the token, click on the Settings in the lower left corner of your Azure Databricks workspace.
-- Click User Settings.
-- Go to the Access Tokens tab.
-- Click the Generate New Token button.
+- To generate the token, click on the **Settings** in the lower left corner of your Azure Databricks workspace.
+- Click **User Settings**.
+- Go to the **Access Tokens tab**.
+- Click the **Generate New Token** button.
 - Optionally enter a description (comment) and expiration period.
-- Click the Generate button.
+- Click the **Generat**e button.
 - Copy the generated token and store in a secure location.
 - Install Databrick-cli following microsoft page. https://docs.microsoft.com/en-us/azure/databricks/dev-tools/cli/
 - Configure credentials in databricks-cli. 
-- Run "databricks configure --token"commands on console.
+- Run `databricks configure --token` commands on console.
 - It will prompt for hostname. Enter your per-workspace URL, with the format https://adb-<workspace-id>.<random-number>.azuredatabricks.net. Get it from your workspace address bar.
 - Now it will prompt to enter the access token, enter the token that was generated in the above steps.
 
