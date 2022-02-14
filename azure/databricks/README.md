@@ -4,7 +4,7 @@
 These instructions will guide you install spark monitoring and host monitoring extensions on azure databricks
 
 ## Short Description
-Azure Databricks provides a way to install additional software or customization the configuration of Spark cluster. While creating/editing azure databricks cluster, It provides option to add an init-script. An init script is a shell script that runs during startup of each cluster node before the Apache Spark driver or worker JVM starts. We are enabling Spark Monitoring Extension on driver node and Host Monitor to each custer node to get the insight of spark cluster and its compute machine.
+Azure Databricks provides a way to install additional software and gives the option to customize the configuration of the Spark cluster. While creating/editing the Azure Databricks cluster, it provides the option to add an init-script. An init script is a shell script that runs during the startup of each cluster node before the Apache Spark driver and worker JVM starts. We will be enabling Spark Monitoring Extension on the Driver node and Host Monitoring Extension on each cluster node to get the insights of the Spark cluster and its compute machines.
 
 ## APM version
 APM 22.3
