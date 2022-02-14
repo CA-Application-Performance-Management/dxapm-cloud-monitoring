@@ -24,7 +24,11 @@ To configure Spark Monitoring and Host Monitoring extensions, follow these steps
 - The **downloaded tar** file will later be uploaded to the Azure Databricks Workspace.
 
 ### Download init-script
-- Download **apmia-installation.sh** script from the github repository.
+- Download **apmia-installation.sh** script from the github repository. Here is the github link path
+  ```
+ https://github.com/CA-Application-Performance-Management/dxapm-cloud-monitoring/blob/master/azure/databricks/apmia-installation.sh
+  ```  
+**Note**: downloaded sh file should be unix compatible
 - The downloaded **apmia-installation.sh** file will later be uploaded to the Azure Databricks Workspace.
 
 ### Download and Configure Databricks CLI
