@@ -88,6 +88,10 @@ Azure Databricks CLI setup is required to upload the installation script and the
 - Click Create.
 - Restart the cluster.
 
+### Verify that the Spark Agent is connected
+- On **DX Application Performance Management**, In the left navigation panel, click on **Agents**.
+- Check if databricks cluster's master hostname (**ClusterID-MasterIP**) is listed there. You may find the `Cluster ID` on the cluster's environment tab.
+
 ## Troubleshooting
 - Make sure while creating the cluster the Network Related setting for master, task or core nodes should have communication channels enabled to communicate with Enterprise Manager, So that Spark Monitor and HostMonitor can report the Metrics to Enterprise Manager without any issue.
 - In case Init-sciprt fails, check logs in configured directory Ex: `dbfs:/cluster-logs`
